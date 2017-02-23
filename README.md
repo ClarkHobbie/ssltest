@@ -20,4 +20,4 @@ and in a different window use
 
 java -cp target\ssl-test-1.0-SNAPSHOT.jar;netty-all-4.1.6.Final.jar SslClient
 
-If it works, then the client should print out the message "It works!" and terminate.
+If it works, then the client should print out the message "It worked!" and terminate.
