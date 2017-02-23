@@ -89,7 +89,6 @@ public class Util {
     }
 
 
-
     public static SslContext createServerSslContext(String keyFilename, String keyPassword, String keyAlias,
                                                     String trustStoreFilename, String trustStorePassword, String trustStoreAlias) {
         SslContext sslContext = null;
@@ -161,5 +160,18 @@ public class Util {
         }
 
         return certificate;
+    }
+
+    public static SslContext createSimpleClientContext () {
+        SslContext sslContext = null;
+
+        try {
+            sslContext = SslContextBuilder.forClient().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return sslContext;
     }
 }

@@ -79,6 +79,8 @@ public class Client {
 
         if (mode == Modes.LocalCA) {
             sslContext = Util.createClientSslContext(certificateFilename);
+        } else if (mode == Modes.RemoteCA) {
+            sslContext = Util.createSimpleClientContext();
         }
 
         String message ="hello, world!";
