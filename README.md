@@ -14,10 +14,10 @@ mvn package
 
 To run it use
 
-java -cp target\ssl-test-1.0-SNAPSHOT.jar;netty-all-4.1.6.Final.jar SslServer
+java -cp target\ssl-test-1.0-SNAPSHOT.jar;netty-all-4.1.6.Final.jar Server
 
 and in a different window use
 
-java -cp target\ssl-test-1.0-SNAPSHOT.jar;netty-all-4.1.6.Final.jar SslClient
+java -cp target\ssl-test-1.0-SNAPSHOT.jar;netty-all-4.1.6.Final.jar Client
 
 If it works, then the client should print out the message "It worked!" and terminate.
