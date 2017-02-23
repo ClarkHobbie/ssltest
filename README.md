@@ -7,6 +7,7 @@ To run it, you need a keystore called "severkeystore" in the current directory t
 To download it use
 
 git clone git://github.com/ClarkHobbie/ssltest.git
+
 To compile it use
 
 mvn package
