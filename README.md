@@ -10,9 +10,11 @@ git clone git://github.com/ClarkHobbie/ssltest.git
 To compile it use
 
 mvn package
+
 To run it use
 
 java -cp target\ssl-test-1.0-SNAPSHOT.jar;netty-all-4.1.6.Final.jar SslServer
+
 and in a different window use
 
 java -cp target\ssl-test-1.0-SNAPSHOT.jar;netty-all-4.1.6.Final.jar SslClient
