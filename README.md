@@ -9,7 +9,7 @@ git clone git://github.com/ClarkHobbie/ssltest.git
 
 You can use the truststore and keystore that come with the project or create your own.  To create a new truststore and keystore use the following commands (you must have openssl and keytool in your path):
 
-'openssl req -x509 -newkey rsa:2048 -keyout ca-key.pem.txt -out ca-certificate.pem.txt -days 365 -nodes
+'openssl req -x509 -newkey rsa:2048 -keyout ca-key.pem.txt -out ca-certificate.pem.txt -days 365 -nodes'
 'keytool -import -keystore truststore -file ca-certificate.pem.txt -alias ca  -storepass whatever
 'keytool –keystore serverkeystore –genkey –alias server -keyalg rsa -storepass whatever
 'keytool –keystore serverkeystore -storepass whatever –certreq –alias server  –file server.csr
