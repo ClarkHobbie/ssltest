@@ -37,4 +37,49 @@ and in a different window use
 
 java -cp target\ssl-test-1.0-SNAPSHOT.jar;lib\netty-all-4.1.6.Final.jar SSLTest client
 
-The client should pompt you with something like "localhost:6789> " when it gets a connection.  Use the strinq "quit" to end the client.
+The client should pompt you with something like "localhost:6789> " when it gets a connection.
+
+Entering anything should result in the following exception being printed out:
+
+io.netty.handler.codec.DecoderException: javax.net.ssl.SSLKeyException: Invalid signature on ECDH server key exchange message
+        at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:442)
+        at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:248)
+        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:373)
+        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:359)
+        at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:351)
+        at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1334)
+        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:373)
+        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:359)
+        at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:926)
+        at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:129)
+        at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:651)
+        at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:574)
+        at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:488)
+        at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:450)
+        at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:873)
+        at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:144)
+        at java.lang.Thread.run(Unknown Source)
+Caused by: javax.net.ssl.SSLKeyException: Invalid signature on ECDH server key exchange message
+        at sun.security.ssl.Handshaker.checkThrown(Unknown Source)
+        at sun.security.ssl.SSLEngineImpl.checkTaskThrown(Unknown Source)
+        at sun.security.ssl.SSLEngineImpl.readNetRecord(Unknown Source)
+        at sun.security.ssl.SSLEngineImpl.unwrap(Unknown Source)
+        at javax.net.ssl.SSLEngine.unwrap(Unknown Source)
+        at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1097)
+        at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:968)
+        at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:902)
+        at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:411)
+        ... 16 more
+Caused by: javax.net.ssl.SSLKeyException: Invalid signature on ECDH server key exchange message
+        at sun.security.ssl.HandshakeMessage$ECDH_ServerKeyExchange.<init>(Unknown Source)
+        at sun.security.ssl.ClientHandshaker.processMessage(Unknown Source)
+        at sun.security.ssl.Handshaker.processLoop(Unknown Source)
+        at sun.security.ssl.Handshaker$1.run(Unknown Source)
+        at sun.security.ssl.Handshaker$1.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at sun.security.ssl.Handshaker$DelegatedTask.run(Unknown Source)
+        at io.netty.handler.ssl.SslHandler.runDelegatedTasks(SslHandler.java:1123)
+        at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1008)
+        ... 18 more
+
+Use the strinq "quit" to end the client.

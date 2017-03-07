@@ -112,6 +112,7 @@ public class SSLTest {
             System.out.println (s);
 
             s = UserInput.getInstance().getLine();
+
             if (s.equalsIgnoreCase("quit") || s.equalsIgnoreCase("bye")) {
                 System.out.println ("quiting");
                 System.exit(0);
