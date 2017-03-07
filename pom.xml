@@ -7,13 +7,21 @@
     <groupId>com.ltsllc</groupId>
     <artifactId>ssl-test</artifactId>
     <version>1.0-SNAPSHOT</version>
-<!--
+
     <dependencies>
+        <!--
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.6.Final</version>
         </dependency>
+        -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>com.sample</artifactId>
+            <scope>system</scope>
+            <systemPath>C:/temp/ssltest/lib/netty-all-4.1.9.Final-20170302.120717-30.jar</systemPath>
+        </dependency>
     </dependencies>
-    -->
+
 </project>
