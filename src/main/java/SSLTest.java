@@ -400,6 +400,9 @@ public class SSLTest {
     }
 
     public static void main (String[] argv) {
+        System.setProperty("javax.net.ssl.trustStore", "wrong");
+        System.setProperty("javax.net.ssl.trustStorePassword", "whatever");
+
         CommandLine commandLine = new CommandLine(argv);
         SSLTest sslTest = new SSLTest(commandLine);
 

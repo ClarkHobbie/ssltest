@@ -11,7 +11,7 @@ You can use the truststore and keystore that come with the project or create you
 
 `openssl req -x509 -newkey rsa:2048 -keyout ca-key.pem.txt -out ca-certificate.pem.txt -days 365 -nodes`
 
-`keytool -import -keystore truststore -file ca-certificate.pem.txt -alias ca  -storepass whateve`
+`keytool -import -keystore truststore -file ca-certificate.pem.txt -alias ca  -storepass whatever`
 
 `keytool –keystore serverkeystore –genkey –alias server -keyalg rsa -storepass whatever`
 
