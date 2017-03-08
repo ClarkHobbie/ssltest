@@ -45,40 +45,53 @@ public class SSLTest {
         }
     }
 
-    public static class UserInput {
-        private static UserInput ourInstance;
-
+    public static class User implements Runnable {
         private String prompt;
-        private BufferedReader bufferedReader;
+        private ClientChannelHandler clientChannelHandler;
 
-        public static synchronized void initializeClass (String prompt) {
-            if (null == ourInstance) {
-                ourInstance = new UserInput (prompt);
+        private User (String prompt) {
+            this.prompt = prompt;
+        }
+
+        public void run () {
+            try {
+                InputStreamReader inputStreamReader = new InputStreamReader(System.in);
+                BufferedReader in = new BufferedReader(inputStreamReader);
+
+                System.out.print(prompt);
+                String s = in.readLine();
+
+                while (!s.equalsIgnoreCase("quit")) {
+                    clientChannelHandler.send(s);
+                    System.out.print(prompt);
+                    s = in.readLine();
+                    s.trim();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
             }
         }
 
-        public static UserInput getInstance () {
-            return ourInstance;
+        public void println (String message) {
+            System.out.println();
+            System.out.println(message);
+            System.out.print(prompt);
         }
 
-        private UserInput (String prompt) {
-            this.prompt = prompt;
-
-            InputStreamReader inputStreamReader = new InputStreamReader(System.in);
-            this.bufferedReader = new BufferedReader(inputStreamReader);
-        }
-
-        public String getLine () throws IOException {
-            System.out.print (prompt);
-            return bufferedReader.readLine();
+        public void start () {
+            Thread thread = new Thread(this);
+            thread.start();
         }
     }
 
     public static class ClientInitializer extends ChannelInitializer<SocketChannel> {
+        private User user;
         private SslContext sslContext;
 
-        public ClientInitializer (SslContext sslContext) {
+        public ClientInitializer (SslContext sslContext, User user) {
             this.sslContext = sslContext;
+            this.user = user;
         }
 
         public void initChannel (SocketChannel socketChannel) {
@@ -87,19 +100,28 @@ public class SSLTest {
                 socketChannel.pipeline().addLast(sslHandler);
             }
 
-            ClientChannelHandler clientChannelHandler = new ClientChannelHandler();
+            ClientChannelHandler clientChannelHandler = new ClientChannelHandler(user);
             socketChannel.pipeline().addLast(clientChannelHandler);
         }
     }
 
     public static class ClientChannelHandler extends ChannelInboundHandlerAdapter {
+        private ChannelHandlerContext channelHandlerContext;
+        private User user;
+
+        public ClientChannelHandler (User user) {
+            this.user = user;
+        }
+
+        public void send (String s) {
+            ByteBuf byteBuf = Unpooled.directBuffer(256);
+            ByteBufUtil.writeUtf8(byteBuf, s);
+            channelHandlerContext.writeAndFlush(byteBuf);
+        }
+
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            String input = UserInput.getInstance().getLine();
-
-            ByteBuf byteBuf = Unpooled.directBuffer(256);
-            ByteBufUtil.writeUtf8(byteBuf, input);
-            ctx.writeAndFlush(byteBuf);
+            channelHandlerContext = ctx;
         }
 
         @Override
@@ -109,18 +131,7 @@ public class SSLTest {
             byteBuf.getBytes(0, buffer);
             String s = new String(buffer);
 
-            System.out.println (s);
-
-            s = UserInput.getInstance().getLine();
-
-            if (s.equalsIgnoreCase("quit") || s.equalsIgnoreCase("bye")) {
-                System.out.println ("quiting");
-                System.exit(0);
-            }
-
-            byteBuf = Unpooled.directBuffer(256);
-            ByteBufUtil.writeUtf8(byteBuf, s);
-            ctx.writeAndFlush(byteBuf);
+            user.println(s);
         }
 
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -389,11 +400,15 @@ public class SSLTest {
 
             NioEventLoopGroup nioEventLoopGroup = new NioEventLoopGroup();
 
+            String prompt = commandLine.getHost() + ":" + commandLine.getPort() + "> ";
+            User user = new User(prompt);
+
             Bootstrap clientBootstrap = new Bootstrap();
             clientBootstrap.channel(NioSocketChannel.class);
             clientBootstrap.group(nioEventLoopGroup);
-            clientBootstrap.handler(new ClientInitializer(sslContext));
+            clientBootstrap.handler(new ClientInitializer(sslContext, user));
             clientBootstrap.connect(getCommandLine().getHost(), getCommandLine().getPort());
+
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
@@ -401,14 +416,8 @@ public class SSLTest {
     }
 
     public static void main (String[] argv) {
-        System.setProperty("javax.net.ssl.trustStore", "wrong");
-        System.setProperty("javax.net.ssl.trustStorePassword", "whatever");
-
         CommandLine commandLine = new CommandLine(argv);
         SSLTest sslTest = new SSLTest(commandLine);
-
-        String prompt = commandLine.getHost() + ":" + commandLine.getPort() + "> ";
-        UserInput.initializeClass(prompt);
 
         if (commandLine.getMode().equalsIgnoreCase("server"))
             sslTest.server();
