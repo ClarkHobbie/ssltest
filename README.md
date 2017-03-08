@@ -12,11 +12,11 @@ mvn package
 
 To run it use
 
-java -cp target\ssl-test-1.0-SNAPSHOT-jar-with-dependencies.jar SSLTest server
+java -cp target\ssl-test-1.0-SNAPSHOT.jar;lib\netty-all-4.1.9.Final-20170302.120717-30.jar SSLTest server
 
 and in a different window use
 
-java -cp target\ssl-test-1.0-SNAPSHOT-jar-with-dependencies.jar SSLTest client
+java -cp target\ssl-test-1.0-SNAPSHOT.jar;lib\netty-all-4.1.9.Final-20170302.120717-30.jar SSLTest client
 
 The client should pompt you with something like "localhost:6789> " when it gets a connection.
 
