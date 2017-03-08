@@ -402,6 +402,7 @@ public class SSLTest {
 
             String prompt = commandLine.getHost() + ":" + commandLine.getPort() + "> ";
             User user = new User(prompt);
+            user.start();
 
             Bootstrap clientBootstrap = new Bootstrap();
             clientBootstrap.channel(NioSocketChannel.class);
